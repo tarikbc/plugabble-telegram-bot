@@ -1,0 +1,18 @@
+{
+  "name": "plugabble-telegram-bot",
+  "version": "1.0.0",
+  "description": "A easily extensible nodejs Telegram bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "plugins",
+    "plugabble",
+    "modular"
+  ],
+  "author": "Rogerio Munhoz",
+  "license": "MIT"
+}
