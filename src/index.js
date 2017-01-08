@@ -1,19 +1,58 @@
-import env from 'dotenv-safe';
 import TelegramBot from 'node-telegram-bot-api';
-import * as commands from './commands';
+import {info, error} from './lib/utils/log';
+import Config from './config';
+import commands from './commands';
 
-if (!process.env.noenv) env.load();
+const takeOff = config => {
+    const TELEGRAM_TOKEN = config.TELEGRAM_TOKEN;
+    const PORT = config.PORT;
+    const HOST = config.HOST;
+    let DOMAIN = config.DOMAIN;
 
-const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {polling: true});
-
-for (let _command in commands.default) {
-    let command = commands[_command].default;
-    bot.onText(command.regex, (msg, match) => {
-        command.run(msg, match)
-            .then((reply) => {
-                bot.sendMessage(msg.chat.id, reply.text, reply.options)
-                    .catch(err => console.log('Erro ao enviar mensagem: ' + err)); // eslint-disable-line no-console
-            })
-            .catch(err => bot.sendMessage(msg.chat.id, `Erro ao executar comando; ${err}`));
+    const bot = new TelegramBot(TELEGRAM_TOKEN, {
+        webHook: {
+            host: HOST
+            , port: PORT
+        }
+        , onlyFirstMatch: true
     });
-}
+
+    bot.getMe()
+        .then(me => {
+            bot.setWebHook(DOMAIN + ':443/bot' + TELEGRAM_TOKEN);
+            let _info = [];
+            const date = new Date();
+            _info.push('');
+            _info.push('------------------------------');
+            _info.push('Bot successfully deployed!');
+            _info.push('------------------------------');
+            _info.push('Bot info:');
+            _info.push(`- ID: ${me.id}`);
+            _info.push(`- Name: ${me.first_name}`);
+            _info.push(`- Username: ${me.username}`);
+            _info.push('\n');
+            _info.push('Server info:');
+            _info.push(`- Host: ${HOST}`);
+            _info.push(`- Port: ${PORT}`);
+            _info.push(`- Domain: ${DOMAIN}`);
+            _info.push(`- Node version: ${process.version}`);
+            _info.push('\n');
+            _info.push('Time Info:');
+            _info.push(
+                `- Date: ${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`);
+            _info.push(
+                `- Time: ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+            );
+            _info.push('------------------------------');
+            info(_info.join('\n'));
+        })
+        .catch(error);
+
+    commands.setUpBot(bot);
+};
+
+const config = new Config();
+
+config.initilialize()
+    .then(() => takeOff(config))
+    .catch(error);
