@@ -13,7 +13,7 @@ If, for any reason, you can't fullfill the promise returned by the `run` method,
 #Disabling commands
 If you, for some reason, need a file insde the [src/commands](src/commands) folder to not be loaded as a command (a WIP command, for example), you can add it's name to the `disabled` array on [src/commands/enabled.js](src/commands/enabled.js#L2). That way you can chosse exactly which commands your bot will respond to.
 
-#ngrok
+#Automatic tunnel for the WebHook
 The bot is prepared to open an ssh tunnel to [ngrok](http://ngrok.com) servers for the WebHook to be accessible out of your network. This way, you don't have to worry about port forwarding or things like that (cause, come on, we all find that stuff boring).
 
 #Feature suggestions and bug reports
