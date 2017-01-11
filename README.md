@@ -14,7 +14,7 @@ If, for any reason, you can't fullfill the promise returned by the `run` method,
 If you, for some reason, need a file insde the `src/commands` folder to not be loaded as a command (a WIP command, for example), you can add it's name to the `disabled` array on `src/commands/enabled.js`. That way you can chosse exactly which commands your bot will respond to.
 
 #ngrok
-The bot is prepared to open an ssh tunnel to [ngrok](ngrok.com) servers for the WebHook to be accessible out of your network. This way, you don't have to worry about port forwarding or things like that (cause, come on, we all find that stuff boring).
+The bot is prepared to open an ssh tunnel to [ngrok](http://ngrok.com) servers for the WebHook to be accessible out of your network. This way, you don't have to worry about port forwarding or things like that (cause, come on, we all find that stuff boring).
 
 #Feature suggestions and bug reports
 Please, feel free to open issues for new feature requests or bugs; also, feel completely free to send me pull requests, just make sure ESLint is happy with your code, and that you follow the patterns found on the rest of the project.
