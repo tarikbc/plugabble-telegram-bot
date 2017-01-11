@@ -1,7 +1,14 @@
 # plugabble-telegram-bot
 An easily extensible nodejs Telegram bot
 
-#Usage
+#Installing
+Just clone the repo, `cd` into it, create the .env (read next session) file and `npm install && npm start`.
+
+#Configuring
+All the basic configuration the bot needs to be up and running can be done through a .env file on the project's root. All the variables on [.env.example](.env.example) should be defined on your .env file for the bot to work.
+For instance, `TELEGRAM_TOKEN` is the token you get from [@botfather](telegram.me/botfather), `LOCAL_IP` is the IP no which the bot will bind for WebHook listening (usually localhost), and `PORT` is the port for listening.
+
+#Expanding
 To add your own commands, just create a file inside [src/commands](src/commands) having the file name as the name of the command.
 The file should export an object with two properties: `regex`, which is the regex that must be matched for your command to be called, and `run`, which is the function that will be called when you command is triggered.
 ##Run method
