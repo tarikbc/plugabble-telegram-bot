@@ -1,26 +1,29 @@
 import enabled from './enabled';
-import {log} from '../lib/utils/log';
+import {info} from '../lib/utils/log';
+let commands = new Map();
 
-let commands = [];
-
+/**
+ *
+ * @param bot TelegramBot Bot que será configurado com os eventos onText
+ * @param error Function
+ */
 const setUpBot = (bot, error) => {
     enabled.forEach(command => {
-        commands[command] = require(`./${command}`).default;
+        commands.set(command, require(`./${command}`).default);
     });
-    log('Setup bot called');
-    log(`Commands: ${commands}`);
-    log(`Enabled: ${enabled}`);
+
     commands.forEach(command => {
-        log(`Command: ${command}`);
         bot.onText(command.regex, (msg, match) => {
             command.run(msg, match)
-                .then(reply => {
-                    bot.sendMessage(msg.chat.id, reply.text, reply.options)
-                        .catch(err => error('Erro ao enviar mensagem: %s', err));
-                })
-                .catch(err => bot.sendMessage(msg.chat.id, `Erro ao executar comando; ${err}`));
+              .then(reply => {
+                  bot.sendMessage(msg.chat.id, reply.text, reply.options)
+                    .catch(err => error('Erro ao enviar mensagem: %s', err));
+              })
+              .catch(err => bot.sendMessage(msg.chat.id, `Erro ao executar comando; ${err}`));
         });
     });
+
+    info(`Comandos habilitados: ${Array.from(commands.keys()).join(', ')}`);
 };
 
 export default {
