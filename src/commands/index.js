@@ -17,7 +17,7 @@ const setUpBot = (bot, error) => {
             command.run(msg, match)
               .then(reply => {
                   bot.sendMessage(msg.chat.id, reply.text, reply.options)
-                    .catch(err => error('Erro ao enviar mensagem: %s', err));
+                    .catch((msg, err) => error(`Erro ao enviar mensagem; ${err}`));
               })
               .catch(err => bot.sendMessage(msg.chat.id, `Erro ao executar comando; ${err}`));
         });

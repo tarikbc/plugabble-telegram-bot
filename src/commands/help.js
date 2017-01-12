@@ -8,14 +8,14 @@ export default {
 
         _enabled.filter(c => c != 'help')
           .forEach((command) => {
-              _commands.set(command, require(`./${command}`));
+              _commands.set(command, require(`./${command}`).default);
           });
 
-        const commands = [];
+        const commands = new Set();
 
         enabled = _enabled.filter(c => {
             const cmmd = _commands.get(c);
-            return (cmmd.isSlashCommad && cmmd.helpText);
+            return (cmmd && 'isSlashCommad' in cmmd && 'helpText' in cmmd);
         });
 
         enabled.forEach(command => {
