@@ -1,15 +1,17 @@
 import enabled from './enabled';
+import {log} from '../lib/utils/log';
 
 let commands = [];
 
-enabled.forEach(command => {
-    commands[command] = require(`./${command}`).default;
-});
-
 const setUpBot = (bot, error) => {
-    console.log('Setup bot');
+    enabled.forEach(command => {
+        commands[command] = require(`./${command}`).default;
+    });
+    log('Setup bot called');
+    log(`Commands: ${commands}`);
+    log(`Enabled: ${enabled}`);
     commands.forEach(command => {
-        console.log('Command: ' + command);
+        log(`Command: ${command}`);
         bot.onText(command.regex, (msg, match) => {
             command.run(msg, match)
                 .then(reply => {
