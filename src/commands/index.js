@@ -2,11 +2,6 @@ import enabled from './enabled';
 import {info} from '../lib/utils/log';
 let commands = new Map();
 
-/**
- *
- * @param bot TelegramBot Bot que será configurado com os eventos onText
- * @param error Function
- */
 const setUpBot = (bot, error) => {
     enabled.forEach(command => {
         commands.set(command, require(`./${command}`).default);
