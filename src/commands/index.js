@@ -7,10 +7,12 @@ enabled.forEach(command => {
 });
 
 const setUpBot = (bot, error) => {
+    console.log('Setup bot');
     commands.forEach(command => {
+        console.log('Command: ' + command);
         bot.onText(command.regex, (msg, match) => {
             command.run(msg, match)
-                .then((reply) => {
+                .then(reply => {
                     bot.sendMessage(msg.chat.id, reply.text, reply.options)
                         .catch(err => error('Erro ao enviar mensagem: %s', err));
                 })
