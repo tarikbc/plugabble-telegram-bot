@@ -45,10 +45,9 @@ const takeOff = config => {
             );
             _info.push('------------------------------');
             info(_info.join('\n'));
+            commands.setUpBot(bot, error);
         })
         .catch(error);
-
-    commands.setUpBot(bot);
 };
 
 const config = new Config();

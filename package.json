@@ -7,7 +7,7 @@
   "scripts": {
     "start": "nodemon",
     "test": "mocha tests"
-  },
+, "build": "gulp"  },
   "keywords": [
     "telegram",
     "bot",
