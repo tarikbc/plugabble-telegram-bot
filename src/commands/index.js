@@ -3,9 +3,8 @@ import { isAdmin } from '../lib/utils/admin';
 import {info} from '../lib/utils/log';
 let commands = new Map();
 
-enabled.forEach(command => commands.set(command, require(`./${command}`).default));
-
 const setUpBot = (bot, error) => {
+  enabled.forEach(command => commands.set(command, require(`./${command}`).default));
   commands.forEach(command =>
     bot.onText(command.regex, (msg, match) => {
       if (!command.adminOnly || isAdmin(msg.from.id)) {
