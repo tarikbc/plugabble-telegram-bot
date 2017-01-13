@@ -6,7 +6,6 @@
   "repository": "https://github.com/rjmunhoz/plugabble-telegram-bot.git",
   "scripts": {
     "prestart": "npm run build",
-    "launch": "npm start",
     "start": "node dist/index.js",
     "test": "mocha tests",
     "build": "gulp"
