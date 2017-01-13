@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "repository": "https://github.com/rjmunhoz/plugabble-telegram-bot.git",
   "scripts": {
-    "prestart": "gulp",
+    "prestart": "npm run build",
+    "launch": "npm start",
     "start": "node dist/index.js",
     "test": "mocha tests",
     "build": "gulp"
