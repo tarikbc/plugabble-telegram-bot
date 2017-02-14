@@ -1,9 +1,18 @@
+/**
+ * Caso precise alterar a forma como alguma configuração
+ * é definida, você pode fazê-lo abaixo.
+ */
 import env from 'dotenv-safe';
 import { Tunnel } from './lib/utils';
 import { info } from './lib/utils/log';
 
 if (!process.env.noenv) env.load();
 
+/**
+ * Você pode, por exemplo, definir PORT como
+ * process.env.OPENSHIFT_NODEJS_PORT caso pretenda
+ * executar o bot na plataforma da RedHat
+ */
 const PORT = process.env.PORT;
 const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
 const HOST = process.env.LOCAL_IP;
@@ -17,10 +26,11 @@ export default class Config {
         this._TELEGRAM_TOKEN = TELEGRAM_TOKEN;
         this._HOST = HOST;
         this._DOMAIN = DOMAIN;
+        this._WEBHOOK = true;
     }
 
     initilialize() {
-        return new Promise((ok, notok) =>
+        return new Promise(ok =>
             (this._DOMAIN)
                 ? ok()
                 : tunnel.openTunnel(this._PORT)
@@ -29,7 +39,10 @@ export default class Config {
                         info(`Ngrok tunnel opened at ${host}`);
                         ok();
                     })
-                    .catch(notok)
+                    .catch(() => {
+                        this._WEBHOOK = false;
+                        ok();
+                    })
         );
     }
 
@@ -48,5 +61,9 @@ export default class Config {
 
     get DOMAIN() {
         return this._DOMAIN;
+    }
+
+    get WEBHOOK() {
+        return this._WEBHOOK;
     }
 }

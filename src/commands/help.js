@@ -1,4 +1,4 @@
-import _enabled from './enabled';
+import _enabled from './enabledCommands';
 
 export default {
     regex: /\/help/

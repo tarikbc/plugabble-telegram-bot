@@ -9,8 +9,9 @@ export default class TunnelUtils {
     openTunnel(port) {
         return new Promise((res, rej) => [
             ngrok.connect(port, (err, host) => {
-                if (err) rej(err);
-                res(host.replace(/https?:\/\//, ''));
+                if (err) return rej(err);
+                if (!host) return rej('Impossível abrir conexão com o ngrok');
+                return res(host.replace(/https?:\/\//, ''));
             })
         ]);
     }

@@ -24,6 +24,13 @@
       "warn",
       "first"
     ],
-    "no-console": "warn"
+    "no-console": "warn",
+    "max-len": [
+      "warn",
+      {
+        "ignoreTemplateLiterals": true,
+        "ignoreTrailingComments": true
+      }
+    ]
   }
 }
