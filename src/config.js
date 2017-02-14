@@ -1,6 +1,6 @@
 import env from 'dotenv-safe';
-import {Tunnel} from './lib/utils';
-import {info} from './lib/utils/log';
+import { Tunnel } from './lib/utils';
+import { info } from './lib/utils/log';
 
 if (!process.env.noenv) env.load();
 
@@ -20,19 +20,17 @@ export default class Config {
     }
 
     initilialize() {
-        return new Promise((ok, notok) => {
-            if (!this._DOMAIN) {
-                tunnel.openTunnel(this._PORT)
+        return new Promise((ok, notok) =>
+            (this._DOMAIN)
+                ? ok()
+                : tunnel.openTunnel(this._PORT)
                     .then(host => {
                         this._DOMAIN = host;
                         info(`Ngrok tunnel opened at ${host}`);
                         ok();
                     })
-                    .catch(notok);
-            } else {
-                ok();
-            }
-        });
+                    .catch(notok)
+        );
     }
 
 
