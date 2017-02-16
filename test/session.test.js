@@ -40,7 +40,7 @@ describe('Session', function() {
         });
 
         it('Sabe que não precisa salvar no banco', function() {
-            s.save();
+            s.persist();
             expect(s.changed).to.equal(false);
         });
     });
@@ -88,9 +88,6 @@ describe('Session', function() {
         });
         it('Step zerado', function() {
             expect(s.step).to.equal(0);
-        });
-        it('UserData limpo', function() {
-            expect(s.userData.size).to.equal(0);
         });
         it('Id não alterado', function() {
             expect(s.id).to.equal(123456);

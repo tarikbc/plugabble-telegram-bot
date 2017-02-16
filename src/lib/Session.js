@@ -1,4 +1,7 @@
 import {hasType} from './utils/types';
+import {session as sessions} from './db';
+import {db} from './utils';
+import {error} from './utils/log';
 
 export default class Session {
     constructor(id /*, doNotLoad = false*/) {
@@ -97,16 +100,48 @@ export default class Session {
     end() {
         this._step = 0;
         this._command = undefined;
-        this.userData.clear();
         this.persist();
         return this;
     }
 
     persist() {
-        this.changed = true;
+        sessions
+            .insert({
+                id: this.id
+                ,step: this.step
+                ,userData: db.serializeMap(this.userData)
+            })
+            .then(this.changed = false)
+            .catch(error);
     }
 
     save() {
-        this.changed = false;
+        this.changed = true;
+    }
+
+    finish() {
+        this.end();
+        return this.persist();
+    }
+
+    static getInstance(id) {
+        return new Promise((res, rej) => {
+            sessions
+                .select({id})
+                .then(_session => {
+                    if (_session) {
+                        res(
+                            new Session(id).setAll(
+                                _session.command,
+                                _session.step,
+                                db.deserializeMap(_session.userData)
+                            )
+                        );
+                    } else {
+                        res(new Session(id));
+                    }
+                })
+                .catch(rej);
+        });
     }
 }
