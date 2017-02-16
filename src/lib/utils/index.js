@@ -1,7 +1,5 @@
 import Tunnel from './tunnel';
 import log from './log';
+import db from './db';
 
-export {
-    Tunnel,
-    log
-};
+export {Tunnel, log, db};

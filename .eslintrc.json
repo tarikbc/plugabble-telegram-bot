@@ -29,8 +29,10 @@
       "warn",
       {
         "ignoreTemplateLiterals": true,
-        "ignoreTrailingComments": true
+        "ignoreTrailingComments": true,
+        "ignoreStrings": true
       }
-    ]
+  ],
+  "comma-dangle": ["error", "never"]
   }
 }
