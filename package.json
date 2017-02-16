@@ -6,7 +6,7 @@
   "repository": "https://github.com/rjmunhoz/plugabble-telegram-bot.git",
   "scripts": {
     "start": "start node dist/index.js",
-    "test": "mocha tests --compilers js:babel-core/register",
+    "test": "mocha",
     "build": "gulp",
     "deploy": "gulp && start node dist/index.js"
   },
@@ -31,6 +31,7 @@
     "gulp-eslint": "^3.0.1",
     "gulp-sourcemaps": "^1.9.1",
     "mocha": "^3.2.0",
+    "mochawesome": "^2.0.3",
     "nodemon": "^1.11.0"
   },
   "dependencies": {

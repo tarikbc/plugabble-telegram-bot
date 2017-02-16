@@ -110,6 +110,7 @@ describe('Session', function() {
         });
         it('Anterior', function() {
             s.step = 5;
+            s.prev();
             expect(s.step).to.equal(4);
         });
         it('Step nunca fica negativo', function() {

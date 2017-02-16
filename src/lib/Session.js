@@ -1,5 +1,4 @@
 import {hasType} from './utils/types';
-import {log} from './utils/log';
 
 export default class Session {
     constructor(id /*, doNotLoad = false*/) {
@@ -75,7 +74,7 @@ export default class Session {
     }
 
     clearProps() {
-        this.userData = new Map();
+        this.userData.clear();
         this.persist();
         return this;
     }
@@ -91,17 +90,14 @@ export default class Session {
     }
 
     prev() {
-        log(this.step);
-        log(`Menos 1 ${this.step - 1}`);
         this.step = this.step > 1 ? this.step - 1 : 0;
-        log(this.step);
         return this;
     }
 
     end() {
         this._step = 0;
         this._command = undefined;
-        this.userData = new Map();
+        this.userData.clear();
         this.persist();
         return this;
     }
