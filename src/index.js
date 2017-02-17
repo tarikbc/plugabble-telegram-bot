@@ -29,6 +29,7 @@ const takeOff = config => {
         })
         : new TelegramBot(TELEGRAM_TOKEN, {
             polling: true
+            ,onlyFirstMatch: true
         });
 
     bot

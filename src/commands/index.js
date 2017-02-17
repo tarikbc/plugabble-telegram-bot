@@ -1,6 +1,6 @@
 import enabled from './enabledCommands';
 import {isAdmin} from '../lib/utils/admin';
-import {info} from '../lib/utils/log';
+import {log, info} from '../lib/utils/log';
 import Session from '../lib/Session';
 
 let commands = new Map();
@@ -11,10 +11,9 @@ enabled.forEach(command =>
 const handleMessage = (error, msg, bot) => {
     Session.getInstance(msg.chat.id).then(session => {
         if (session.command) {
-            const _command = commands.get(session.command)[session.step];
-            _command
-                .run(session, msg)
-                .then(result => handleCommandResult(error, bot, msg, result));
+            const run = commands.get(session.command).run[session.step];
+            run(session, msg).then(result =>
+                handleCommandResult(error, bot, msg, result));
         } else {
             info(msg);
             bot.sendMessage(
@@ -32,14 +31,19 @@ const handleCommandResult = (error, bot, msg, result) => {
 };
 
 const setUpBot = (bot, error) => {
+    commands.forEach(command => {
+        log(`command: ${JSON.stringify(command)}`);
+    });
     commands.forEach(command => bot.onText(command.regex, (msg, match) => {
         bot
             .sendChatAction(msg.chat.id, 'typing')
             .then(() => {
                 const session = new Session(msg.chat.id);
                 if (!command.adminOnly || isAdmin(msg.from.id)) {
-                    command
-                        .run(session, msg, match)
+                    const run = Array.isArray(command.run)
+                        ? command.run[session.step]
+                        : command.run;
+                    run(session, msg, match)
                         .then(result =>
                             handleCommandResult(error, bot, msg, result))
                         .catch(err => error(msg, err));

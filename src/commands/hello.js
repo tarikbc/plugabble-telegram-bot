@@ -14,7 +14,7 @@ export default {
             });
         })
         ,(session, msg) => new Promise((res, rej) => {
-            session.setProp('name', msg.text).catch(rej);
+            session.setProp('name', msg.text);
             session
                 .finish()
                 .then(

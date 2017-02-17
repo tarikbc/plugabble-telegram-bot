@@ -1,7 +1,6 @@
 import {hasType} from './utils/types';
 import {session as sessions} from './db';
-import {db} from './utils';
-import {error} from './utils/log';
+import dbUtils from './utils/db';
 
 export default class Session {
     constructor(id /*, doNotLoad = false*/) {
@@ -25,7 +24,7 @@ export default class Session {
 
     set command(command) {
         this._command = command;
-        this.persist();
+        this.save();
     }
 
     get step() {
@@ -44,7 +43,7 @@ export default class Session {
     set userData(userData) {
         if (hasType(userData, 'map')) {
             this._userData = userData;
-            this.persist();
+            this.save();
         } else
             throw new TypeError('userData precisa ser um map!');
     }
@@ -61,7 +60,7 @@ export default class Session {
         this.command = command;
         this.step = step;
         this.userData = userData;
-        this.persist();
+        this.save();
         return this;
     }
 
@@ -72,13 +71,13 @@ export default class Session {
 
     setProp(key, value) {
         this._userData.set(key, value);
-        this.persist();
+        this.save();
         return this;
     }
 
     clearProps() {
         this.userData.clear();
-        this.persist();
+        this.save();
         return this;
     }
 
@@ -100,19 +99,23 @@ export default class Session {
     end() {
         this._step = 0;
         this._command = undefined;
-        this.persist();
+        this.save();
         return this;
     }
 
     persist() {
-        sessions
+        this.changed = false;
+        return new Promise((res, rej) => sessions
             .insert({
                 id: this.id
+                ,command: this.command
                 ,step: this.step
-                ,userData: db.serializeMap(this.userData)
+                ,userData: dbUtils.serializeMap(this.userData)
             })
-            .then(this.changed = false)
-            .catch(error);
+            .then(() => {
+                res(this);
+            })
+            .catch(rej));
     }
 
     save() {
@@ -134,7 +137,7 @@ export default class Session {
                             new Session(id).setAll(
                                 _session.command,
                                 _session.step,
-                                db.deserializeMap(_session.userData)
+                                dbUtils.deserializeMap(_session.userData)
                             )
                         );
                     } else {

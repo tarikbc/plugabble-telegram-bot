@@ -1,7 +1,7 @@
 const serializeMap = map => {
     const _result = [];
 
-    map.forEach((key, val) => {
+    map.forEach((val, key) => {
         _result.push({
             key
             ,val
@@ -14,9 +14,9 @@ const serializeMap = map => {
 const deserializeMap = data => {
     const _result = new Map();
     data.forEach(x => {
-        _result.set(x.key, x.value);
+        _result.set(x.key, x.val);
     });
     return _result;
 };
 
-export {serializeMap, deserializeMap};
+export default {serializeMap, deserializeMap};
