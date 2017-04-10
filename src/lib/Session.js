@@ -1,5 +1,5 @@
-import {hasType} from './utils/types';
-import {session as sessions} from './db';
+import { hasType } from './utils/types';
+import { session as sessions } from './db';
 import dbUtils from './utils/db';
 
 export default class Session {
@@ -81,12 +81,18 @@ export default class Session {
         return this;
     }
 
+    /**
+     * Sets the session's command to {command} and the step to 1
+     * @param {string} command Command to pass the control of the session to
+     */
     start(command) {
         this.command = command;
+        this.next();
         return this;
     }
 
-    next() {
+    next(command) {
+        if(command) this.command = command;
         this.step = this.step + 1;
         return this;
     }
@@ -108,9 +114,9 @@ export default class Session {
         return new Promise((res, rej) => sessions
             .insert({
                 id: this.id
-                ,command: this.command
-                ,step: this.step
-                ,userData: dbUtils.serializeMap(this.userData)
+                , command: this.command
+                , step: this.step
+                , userData: dbUtils.serializeMap(this.userData)
             })
             .then(() => {
                 res(this);
@@ -130,7 +136,7 @@ export default class Session {
     static getInstance(id) {
         return new Promise((res, rej) => {
             sessions
-                .select({id})
+                .select({ id })
                 .then(_session => {
                     if (_session) {
                         res(

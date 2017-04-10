@@ -1,6 +1,6 @@
 import enabled from './enabledCommands';
-import {isAdmin} from '../lib/utils/admin';
-import {log, info} from '../lib/utils/log';
+import { isAdmin } from '../lib/utils/admin';
+import { info } from '../lib/utils/log';
 import Session from '../lib/Session';
 
 let commands = new Map();
@@ -15,7 +15,6 @@ const handleMessage = (error, msg, bot) => {
             run(session, msg).then(result =>
                 handleCommandResult(error, bot, msg, result));
         } else {
-            info(msg);
             bot.sendMessage(
                 msg.chat.id,
                 'Desculpa... Não entendi :/\nUse /help para obter uma lista dos comandos disponíveis'
@@ -31,9 +30,6 @@ const handleCommandResult = (error, bot, msg, result) => {
 };
 
 const setUpBot = (bot, error) => {
-    commands.forEach(command => {
-        log(`command: ${JSON.stringify(command)}`);
-    });
     commands.forEach(command => bot.onText(command.regex, (msg, match) => {
         bot
             .sendChatAction(msg.chat.id, 'typing')

@@ -2,7 +2,7 @@ export default {
     regex: /\/hello/
     ,run: [
         session => new Promise((res, rej) => {
-            session.next().persist().catch(rej);
+            session.start('hello').persist().catch(rej);
             const name = session.getProp('name');
             res({
                 text: (
@@ -26,5 +26,5 @@ export default {
         })
     ]
     ,isSlashCommad: true
-    ,helpText: 'Repete a mensagem enviada (suporta Markdown)'
+    ,helpText: 'Define seu apelido no banco de dados do bot'
 };
