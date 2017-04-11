@@ -1,7 +1,8 @@
 import TelegramBot from 'node-telegram-bot-api';
-import {info, error} from './lib/utils/log';
+import {error, info} from './lib/utils/log';
 import Config from './config';
 import commands from './commands';
+import pj from 'prettyjson';
 
 /**
  * Instancia o objeto do bot e chama método que adiciona um handler para cada
@@ -23,13 +24,13 @@ const takeOff = config => {
         ? new TelegramBot(TELEGRAM_TOKEN, {
             webHook: {
                 host: HOST
-                  ,port: PORT
+                , port: PORT
             }
-            ,onlyFirstMatch: true
+            , onlyFirstMatch: true
         })
         : new TelegramBot(TELEGRAM_TOKEN, {
             polling: true
-            ,onlyFirstMatch: true
+            , onlyFirstMatch: true
         });
 
     bot
@@ -71,11 +72,14 @@ const takeOff = config => {
             );
             _info.push('------------------------------');
             info(_info.join('\n'));
-            commands.setUpBot(bot, (msg, err) =>
+            commands.setUpBot(bot, (msg, err) => {
+                error(pj.render(msg));
+                error(pj.render(err));
                 bot.sendMessage(
                     msg.chat.id,
                     `Erro ao executar comando: ${err}`
-                ));
+                );
+            });
         })
         .catch(error);
 };

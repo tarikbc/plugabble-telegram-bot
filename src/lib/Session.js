@@ -1,6 +1,7 @@
-import { hasType } from './utils/types';
-import { session as sessions } from './db';
+import {hasType} from './utils/types';
+import {session as sessions} from './db';
 import dbUtils from './utils/db';
+import SessionsPool from './SessionsPool';
 
 export default class Session {
     constructor(id /*, doNotLoad = false*/) {
@@ -84,15 +85,15 @@ export default class Session {
     /**
      * Sets the session's command to {command} and the step to 1
      * @param {string} command Command to pass the control of the session to
+     * @return {Session} section with the command set to {command} and step set to 1
      */
     start(command) {
         this.command = command;
-        this.next();
+        this.step = 1;
         return this;
     }
 
-    next(command) {
-        if(command) this.command = command;
+    next() {
         this.step = this.step + 1;
         return this;
     }
@@ -133,24 +134,35 @@ export default class Session {
         return this.persist();
     }
 
-    static getInstance(id) {
+    static deserialize(id, _session) {
+        return new Session(id).setAll(
+            _session.command,
+            _session.step,
+            dbUtils.deserializeMap(_session.userData)
+        );
+    }
+
+    static getInstance(id, forceReload = false) {
         return new Promise((res, rej) => {
-            sessions
-                .select({ id })
-                .then(_session => {
-                    if (_session) {
-                        res(
-                            new Session(id).setAll(
-                                _session.command,
-                                _session.step,
-                                dbUtils.deserializeMap(_session.userData)
-                            )
-                        );
-                    } else {
-                        res(new Session(id));
-                    }
-                })
-                .catch(rej);
+            const session = SessionsPool.get(id);
+            if (!session || forceReload) {
+                sessions
+                    .select({id})
+                    .then(_session => {
+                        if (_session) {
+                            const _newSession = this.deserialize(id, _session);
+                            SessionsPool.set(id, _newSession);
+                            res(_newSession);
+                        } else {
+                            const _newSession = new Session(id);
+                            SessionsPool.set(id, _newSession);
+                            res(_newSession);
+                        }
+                    })
+                    .catch(rej);
+            } else {
+                res(session);
+            }
         });
     }
 }

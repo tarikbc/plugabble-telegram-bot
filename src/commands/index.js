@@ -1,6 +1,6 @@
 import enabled from './enabledCommands';
-import { isAdmin } from '../lib/utils/admin';
-import { info } from '../lib/utils/log';
+import {isAdmin} from '../lib/utils/admin';
+import {info} from '../lib/utils/log';
 import Session from '../lib/Session';
 
 let commands = new Map();
@@ -34,21 +34,26 @@ const setUpBot = (bot, error) => {
         bot
             .sendChatAction(msg.chat.id, 'typing')
             .then(() => {
-                const session = new Session(msg.chat.id);
-                if (!command.adminOnly || isAdmin(msg.from.id)) {
-                    const run = Array.isArray(command.run)
-                        ? command.run[session.step]
-                        : command.run;
-                    run(session, msg, match)
-                        .then(result =>
-                            handleCommandResult(error, bot, msg, result))
-                        .catch(err => error(msg, err));
-                } else {
-                    error(
-                        msg,
-                        'Este comando só pode ser executado por admins.'
-                    );
-                }
+                Session.getInstance(msg.chat.id)
+                    .then(session => {
+                        if (!command.adminOnly || isAdmin(msg.from.id)) {
+                            const run = Array.isArray(command.run)
+                                ? command.run[session.step]
+                                : command.run;
+                            run(session, msg, match)
+                                .then(result =>
+                                    handleCommandResult(error, bot, msg, result))
+                                .catch(err => error(msg, err));
+                        } else {
+                            error(
+                                msg,
+                                'Este comando só pode ser executado por admins.'
+                            );
+                        }
+                    })
+                    .catch(err => {
+                        error(msg, err);
+                    });
             })
             .catch(error);
     }));
