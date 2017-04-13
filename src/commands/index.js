@@ -51,7 +51,7 @@ const handleCommandResult = (error, bot, msg, result) => {
 const setUpBot = (bot, error) => {
     commands.forEach(command => bot.onText(command.regex, (msg, match) => {
         bot
-            .sendChatAction(msg.chat.id, 'typing')
+            .sendChatAction(msg.chat.id, command.chat_action || 'typing')
             .then(() => {
                 Session.getInstance(msg.chat.id)
                     .then(session => {
@@ -74,7 +74,7 @@ const setUpBot = (bot, error) => {
                         error(msg, err);
                     });
             })
-            .catch(error);
+            .catch(err => error(msg, err));
     }));
 
     bot.onText(/.*/, msg => handleMessage(error, msg, bot));
