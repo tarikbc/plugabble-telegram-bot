@@ -1,3 +1,6 @@
+/**
+ * Gera uma lista dos comandos e suas descrições dinamicamente
+ */
 import _enabled from './enabledCommands';
 
 export default {
@@ -6,7 +9,7 @@ export default {
         const _commands = new Map();
         let enabled;
 
-        _enabled.filter(c => c != 'help')
+        _enabled.filter(c => c !== 'help')
           .forEach((command) => {
               _commands.set(command, require(`./${command}`).default);
           });

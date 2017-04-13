@@ -1,3 +1,6 @@
+/**
+ * Repete a mensagem enviada pelo usuário
+ */
 export default {
     regex: /\/echo (.*)/
     ,run: (session, msg, match) => new Promise(res => res({

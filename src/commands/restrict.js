@@ -1,3 +1,6 @@
+/**
+ * Repete, em negrito, a mensagem enviada pelo usuário. Uso restrito a administradores
+ */
 export default {
     regex: /\/restrict (.*)/
     ,run: (session, msg, match) =>

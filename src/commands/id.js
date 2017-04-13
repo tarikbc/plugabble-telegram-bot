@@ -1,3 +1,6 @@
+/**
+ * Exibe o ID do usuário e da conversa
+ */
 export default {
     regex: /\/id/
     ,run: (session, msg) => new Promise(res => res({

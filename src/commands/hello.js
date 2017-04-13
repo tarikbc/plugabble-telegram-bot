@@ -1,15 +1,17 @@
+/**
+ * Define ou altera o apelido do usuário
+ */
 export default {
     regex: /\/hello/
     , run: [
-
         session => new Promise((res, rej) => {
             session.start('hello').persist().catch(rej);
             const name = session.getProp('name');
             res({
                 text: (
                     name
-                        ? `Olá, ${name}! Quer trocar de apelido? Ok, Como quer que eu te chame?`
-                        : 'Olá =)\nComo quer que eu te chame?'
+                        ? `Olá, ${name}! Quer trocar de apelido? Ok, Como quer que eu te chame? (/cancel para cancelar)`
+                        : 'Olá =)\nComo quer que eu te chame? (/cancel para cancelar)'
                 )
                 , options: {parse_mode: 'Markdown'}
             });
