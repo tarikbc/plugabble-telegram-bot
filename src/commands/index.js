@@ -1,13 +1,20 @@
 import enabled from './enabledCommands';
-import {isAdmin} from '../lib/utils/admin';
+import {isAdmin, notifyAdmins} from '../lib/utils/admin';
 import {info} from '../lib/utils/log';
 import Session from '../lib/Session';
+import pj from 'prettyjson';
 
 let commands = new Map();
 
 enabled.forEach(command =>
     commands.set(command, require(`./${command}`).default));
 
+/**
+ * Trata mensagens que não se encaixaram em nenhum comando
+ * @param error
+ * @param msg
+ * @param {TelegramBot} bot
+ */
 const handleMessage = (error, msg, bot) => {
     Session.getInstance(msg.chat.id).then(session => {
         if (session.command) {
@@ -23,12 +30,24 @@ const handleMessage = (error, msg, bot) => {
     });
 };
 
+/**
+ * Trata o resultado de um comando
+ * @param error function passada pelo index para tratamento de erro dentro dos comandos
+ * @param bot instância de {TelegramBot} a ser usada para enviar as mensagens de retorno
+ * @param msg intância da mensagem que está sendo respondida
+ * @param result resposta do comando que deve ser enviada ao usuário
+ */
 const handleCommandResult = (error, bot, msg, result) => {
     bot
         .sendMessage(msg.chat.id, result.text, result.options)
         .catch(err => error(msg, `Erro ao enviar mensagem: ${err}`));
 };
 
+/**
+ * Adiciona listeners para cada comando habilitado e define tratamento de erros de baixo nível
+ * @param bot instância de {TelegramBot} a ser inicializada
+ * @param error function a ser utilizada para reportar erros aos usuários
+ */
 const setUpBot = (bot, error) => {
     commands.forEach(command => bot.onText(command.regex, (msg, match) => {
         bot
@@ -59,6 +78,16 @@ const setUpBot = (bot, error) => {
     }));
 
     bot.onText(/.*/, msg => handleMessage(error, msg, bot));
+
+    bot.on('webhook_error', error => {
+        notifyAdmins(bot, `Erro de WebHook: \`${pj.render(error)}\`\nDesligamento por segurança acionado`);
+        process.exit(0);
+    });
+
+    bot.on('polling_error', error => {
+        notifyAdmins(bot, `Erro de Polling: \`${pj.render(error)}\`\nDesligamento por segurança acionado`);
+        process.exit(0);
+    });
 
     info(`\nComandos habilitados: ${Array.from(commands.keys()).join(', ')}`);
 };
