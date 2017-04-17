@@ -4,10 +4,12 @@ import {info} from '../lib/utils/log';
 import Session from '../lib/Session';
 import pj from 'prettyjson';
 
-let commands = new Map();
+//let commands = new Map();
 
-enabled.forEach(command =>
-    commands.set(command, require(`./${command}`).default));
+let commands = enabled.reduce((acc, cur) => {
+    acc.set(cur, require(`./${cur}`).default);
+    return acc;
+}, new Map());
 
 /**
  * Trata mensagens que não se encaixaram em nenhum comando

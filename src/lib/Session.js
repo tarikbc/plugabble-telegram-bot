@@ -1,4 +1,5 @@
 import {hasType} from './utils/types';
+import {isAdmin} from './utils/admin';
 import {session as sessions} from './db';
 import dbUtils from './utils/db';
 import SessionsPool from './SessionsPool';
@@ -55,6 +56,10 @@ export default class Session {
 
     set changed(changed) {
         this._changed = changed;
+    }
+
+    get isAdmin() {
+        return isAdmin(this.id);
     }
 
     setAll(command, step, userData) {

@@ -13,6 +13,6 @@ export default {
             })
             .catch(rej);
     })
-    , isSlashCommad: true
+    , isSlashCommand: true
     , helpText: 'Cancela a operação atual'
 };
