@@ -154,15 +154,9 @@ export default class Session {
                 sessions
                     .select({id})
                     .then(_session => {
-                        if (_session) {
-                            const _newSession = this.deserialize(id, _session);
-                            SessionsPool.set(id, _newSession);
-                            res(_newSession);
-                        } else {
-                            const _newSession = new Session(id);
-                            SessionsPool.set(id, _newSession);
-                            res(_newSession);
-                        }
+                        const _newSession = _session ? this.deserialize(id, _session) : new Session(id);
+                        SessionsPool.set(id, _newSession);
+                        res(_newSession);
                     })
                     .catch(rej);
             } else {
