@@ -1,6 +1,6 @@
 import enabled from './enabledCommands';
-import {isAdmin, notifyAdmins} from '../lib/utils/admin';
-import {info} from '../lib/utils/log';
+import { isAdmin, notifyAdmins } from '../lib/utils/admin';
+import { info } from '../lib/utils/log';
 import Session from '../lib/Session';
 import pj from 'prettyjson';
 
@@ -11,10 +11,30 @@ let commands = enabled.reduce((acc, cur) => {
     return acc;
 }, new Map());
 
+
+/**
+ * Envia {content} para uma lista de {ids}
+ * @param {Object} error 
+ * @param {TelegramBot} bot 
+ * @param {Object} msg 
+ * @param {Object} content 
+ * @param {Array} ids 
+ */
+const broadcast = (error, bot, msg, content, ids) => {
+    bot.sendMessage(msg.chat.id, `Iniciando broadcast para ${ids.length} usuários.`)
+        .then(() => {
+            ids.forEach(el => {
+                bot.forwardMessage(el, content.broadcast.chat.id, content.broadcast.message_id, content.options)
+                    .catch(err => error(msg, `Erro ao entregar mensagem para ${el}: ${err}`));
+            });
+            bot.sendMessage(msg.chat.id, 'Mensagens enviadas');
+        });
+};
+
 /**
  * Trata mensagens que não se encaixaram em nenhum comando
- * @param error
- * @param msg
+ * @param {Object} error
+ * @param {Object} msg
  * @param {TelegramBot} bot
  */
 const handleMessage = (error, msg, bot) => {
@@ -40,9 +60,18 @@ const handleMessage = (error, msg, bot) => {
  * @param result resposta do comando que deve ser enviada ao usuário
  */
 const handleCommandResult = (error, bot, msg, result) => {
-    bot
-        .sendMessage(msg.chat.id, result.text, result.options)
-        .catch(err => error(msg, `Erro ao enviar mensagem: ${err}`));
+    if (result.text) {
+        bot.sendMessage(msg.chat.id, result.text, result.options)
+            .catch(err => error(msg, `Erro ao enviar mensagem: ${err}`));
+    } else if (result.broadcast) {
+        if (result.ids) {
+            broadcast(error, bot, msg, result, result.ids);
+        } else {
+            Session.getIds().then(ids => {
+                broadcast(error, bot, msg, result, ids);
+            });
+        }
+    }
 };
 
 /**

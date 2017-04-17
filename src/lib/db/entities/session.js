@@ -1,16 +1,16 @@
-import mongoose, {Schema} from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 mongoose.Promise = global.Promise;
 
 // Criação do Schema
 const jsonSchema = {
     id: Number
-    ,command: String
-    ,step: Number
-    ,userData: [
+    , command: String
+    , step: Number
+    , userData: [
         {
             key: Schema.Types.Mixed
-            ,val: Schema.Types.Mixed
+            , val: Schema.Types.Mixed
         }
     ]
 };
@@ -23,7 +23,7 @@ const Controller = {
     insert: d => {
         return new Promise((res, rej) => {
             const id = d.id;
-            Session.findOne({id}, (err, doc) => {
+            Session.findOne({ id }, (err, doc) => {
                 if (err)
                     rej(err);
                 else if (!doc) {
@@ -43,7 +43,7 @@ const Controller = {
             });
         });
     }
-    ,select: q => {
+    , select: q => {
         return new Promise((res, rej) => {
             Session.findOne(q, (err, data) => {
                 if (err) rej(err);
@@ -51,12 +51,19 @@ const Controller = {
             });
         });
     }
-    ,delete: q => {
+    , delete: q => {
         return new Promise((res, rej) => {
             Session.remove(q, (err, data) => {
                 if (err) rej(err);
                 else res(data);
             });
+        });
+    }
+    , getAll: () => {
+        return new Promise((res, rej) => {
+            Session.find({})
+                .then(res)
+                .catch(rej);
         });
     }
 };

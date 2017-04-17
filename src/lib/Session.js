@@ -1,6 +1,6 @@
-import {hasType} from './utils/types';
-import {isAdmin} from './utils/admin';
-import {session as sessions} from './db';
+import { hasType } from './utils/types';
+import { isAdmin } from './utils/admin';
+import { session as sessions } from './db';
 import dbUtils from './utils/db';
 import SessionsPool from './SessionsPool';
 
@@ -252,7 +252,7 @@ export default class Session {
             const session = SessionsPool.get(id);
             if (!session || forceReload) {
                 sessions
-                    .select({id})
+                    .select({ id })
                     .then(_session => {
                         const _newSession = _session ? this.deserialize(id, _session) : new Session(id);
                         SessionsPool.set(id, _newSession);
@@ -262,6 +262,14 @@ export default class Session {
             } else {
                 res(session);
             }
+        });
+    }
+
+    static getIds() {
+        return new Promise((res, rej) => {
+            sessions.getAll()
+                .then(data => res(data.map(el => el.id)))
+                .catch(rej);
         });
     }
 }
