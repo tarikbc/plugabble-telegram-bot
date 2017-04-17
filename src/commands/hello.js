@@ -13,7 +13,7 @@ export default {
                         ? `Olá, ${name}! Quer trocar de apelido? Ok, Como quer que eu te chame? (/cancel para cancelar)`
                         : 'Olá =)\nComo quer que eu te chame? (/cancel para cancelar)'
                 )
-                , options: {parse_mode: 'Markdown'}
+                , options: { parse_mode: 'Markdown' }
             });
         })
         , (session, msg) => new Promise((res, rej) => {
@@ -21,9 +21,9 @@ export default {
             session
                 .finish()
                 .then(
-                    res({
-                        text: `Ok, vou te chamar de ${msg.text}, então =)`
-                    })
+                res({
+                    text: `Ok, vou te chamar de ${msg.text}, então =)\nSe precisar de ajuda, é só mandar /help!`
+                })
                 )
                 .catch(rej);
         })
