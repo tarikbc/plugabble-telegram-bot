@@ -39,3 +39,6 @@ jspm_packages
 dist
 .idea
 .env
+
+#test results
+mochawesome-reports
