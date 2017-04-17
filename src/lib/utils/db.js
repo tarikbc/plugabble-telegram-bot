@@ -1,5 +1,5 @@
 const serializeMap = map => Array.from(map).reduce((acc, cur) => {
-    acc.push({[cur[0]]: cur[1]});
+    acc.push({key: cur[0], val: cur[1]});
     return acc;
 }, []);
 
