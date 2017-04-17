@@ -28,6 +28,6 @@ export default {
                 .catch(rej);
         })
     ]
-    , isSlashCommad: true
+    , isSlashCommand: true
     , helpText: 'Define seu apelido no banco de dados do bot'
 };

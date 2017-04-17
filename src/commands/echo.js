@@ -3,10 +3,10 @@
  */
 export default {
     regex: /\/echo (.*)/
-    ,run: (session, msg, match) => new Promise(res => res({
-        text: match[1]
-        ,options: {parse_mode: 'Markdown'}
+    , run: (session, msg, match) => new Promise(res => res({
+        text: match[1].replace(/\*/g, '')
+        , options: {parse_mode: 'Markdown'}
     }))
-    ,isSlashCommad: true
-    ,helpText: 'Repete a mensagem enviada (suporta Markdown)'
+    , isSlashCommand: true
+    , helpText: 'Repete a mensagem enviada (negrito reservado a admins)'
 };

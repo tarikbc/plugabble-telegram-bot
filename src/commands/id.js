@@ -9,6 +9,6 @@ export default {
         )
         ,options: {parse_mode: 'Markdown'}
     }))
-    ,isSlashCommad: true
+    ,isSlashCommand: true
     ,helpText: 'Retorna o ID da conversa e do usuário'
 };
