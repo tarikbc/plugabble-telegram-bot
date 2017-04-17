@@ -1,0 +1,3 @@
+--compilers js:babel-core/register
+--reporter mochawesome
+--require=env-test

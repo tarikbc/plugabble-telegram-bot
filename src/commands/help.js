@@ -1,28 +1,27 @@
+/**
+ * Gera uma lista dos comandos e suas descrições dinamicamente
+ */
 import _enabled from './enabledCommands';
+
+const isValidHelpCommand = (command, session) => {
+    if (!command) return false;
+    if (!('isSlashCommand' in command)) return false;
+    if (!('helpText' in command)) return false;
+    if (!command.isSlashCommand) return false;
+    if (command.adminOnly && !session.isAdmin) return false;
+    return true;
+};
 
 export default {
     regex: /\/help/
-    , run: () => new Promise(res => {
-        const _commands = new Map();
-        let enabled;
-
-        _enabled.filter(c => c != 'help')
-          .forEach((command) => {
-              _commands.set(command, require(`./${command}`).default);
-          });
-
-        const commands = new Set();
-
-        enabled = _enabled.filter(c => {
-            const cmmd = _commands.get(c);
-            return (cmmd && 'isSlashCommad' in cmmd && 'helpText' in cmmd);
-        });
-
-        enabled.forEach(command => {
-            const cmmd = _commands.get(command);
-            const entry = `/${command}: ${cmmd.helpText}`;
-            commands.add(entry);
-        });
+    , run: (session) => new Promise(res => {
+        const commands = _enabled.reduce((acc, cur) => {
+            if (cur !== 'help') acc.push([cur, require(`./${cur}`).default]);
+            return acc;
+        }, [])
+            .reduce((acc, cur) => {
+                return isValidHelpCommand(cur[1], session) ? acc.add(`/${cur[0]}: ${cur[1].helpText}`) : acc;
+            }, new Set());
 
         commands.add('/help: Mostra essa mensagem');
 
@@ -30,5 +29,5 @@ export default {
         res({text: ret});
     })
     , name: 'help'
-    , isSlashCommad: true
+    , isSlashCommand: true
 };
