@@ -18,7 +18,7 @@ const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
 const HOST = process.env.LOCAL_IP;
 const DOMAIN = process.env.LOCAL_URL;
 const tunnel = new Tunnel();
-
+const POLLING = process.env.POLLING;
 export default class Config {
 
     constructor() {
@@ -27,13 +27,14 @@ export default class Config {
         this._HOST = HOST;
         this._DOMAIN = DOMAIN;
         this._WEBHOOK = true;
+        this._POLLING = POLLING;
     }
 
     initilialize() {
         return new Promise(ok =>
-            (this._DOMAIN)
-                ? ok()
-                : tunnel.openTunnel(this._PORT)
+            if(this._DOMAIN) ok();
+            else  if(!this._POLLING) {
+                tunnel.openTunnel(this._PORT)
                     .then(host => {
                         this._DOMAIN = host;
                         info(`Ngrok tunnel opened at ${host}`);
@@ -43,6 +44,10 @@ export default class Config {
                         this._WEBHOOK = false;
                         ok();
                     })
+            } else {
+                this._WEBHOOK = false;
+                ok();
+            }
         );
     }
 
