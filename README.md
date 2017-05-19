@@ -1,27 +1,29 @@
 # plugabble-telegram-bot
-An easily extensible nodejs Telegram bot
+Um scaffolding para Bot do Telegram utilizando NodeJS
 
-# Installing
-Just clone the repo, `cd` into it, create the .env (read next session) file and `npm install && npm start`.
+[English, please](README-en.md)
 
-# Configuring
-All the basic configuration the bot needs to be up and running can be done through a .env file on the project's root. All the variables on [.env.example](.env.example) should be defined on your .env file for the bot to work.
-For instance, `TELEGRAM_TOKEN` is the token you get from [@botfather](telegram.me/botfather), `LOCAL_IP` is the IP no which the bot will bind for WebHook listening (usually localhost), and `PORT` is the port for listening.
+# Instalação
+Clone esse repositório, entre com `cd` no projeto e execute `npm install && npm start`.
 
-# Expanding
-To add your own commands, just create a file inside [src/commands](src/commands) having the file name as the name of the command.
-The file should export an object with two properties: `regex`, which is the regex that must be matched for your command to be called, and `run`, which is the function that will be called when you command is triggered.
-## Run method
-The Run method of your command should return a Promise that, once fullfiled, provides an object containing a `text` property, which stands fort the text that should be sent back to the user. Optionally, you can also pass a property called `options` containing adittional options to pass to the Bot API.
+# Configuração
+Todas as configurações básicas que o bot necessita para funcionar estão no arquivo .env na pasta base do projeto. Todas as variáveis estão no [.env.example](.env.example) para serem definidas para que o bot seja devidamente configurado.
+Por exemplo, `TELEGRAM_TOKEN` e o token que você recebe do [@botfather](telegram.me/botfather), `LOCAL_IP` e o endereço de IP que o bot ira se conectar para o WebHook(geralmente localhost), e `PORT` e a porta que ele vai escutar.
 
-### Rejection
-If, for any reason, you can't fullfill the promise returned by the `run` method, the reject method should be called only with a string that will be sent back to the user with a nice message.
+# Expansão
+Para adicionar os seus próprios comandos, basta criar um arquivo dentro de [src/commands](src/commands) com o nome do arquivo sendo o mesmo nome do comando. O arquivo deve exportar um objeto com duas propriedades: `regex` que é o regex que correspondente para o comando ser executado, e `run` que é a função que será chamada quando o comando é acionado.
 
-# Disabling commands
-If you, for some reason, need a file insde the [src/commands](src/commands) folder to not be loaded as a command (a WIP command, for example), you can add it's name to the `disabled` array on [src/commands/enabled.js](src/commands/enabledCommands.js#L5). That way you can chosse exactly which commands your bot will respond to.
+## Método de execução
+O método run do seu comando deve retornar uma Promisse que, uma vez completa, fornece um objeto contendo uma propriedade `text`, que deve ser enviado de volta para o usuário. opcionalmente, você também pode passar uma propriedade chamada `options` contendo opções adicionais para passar a API do Bot.
 
-# Automatic tunnel for the WebHook
-The bot is prepared to open an ssh tunnel to [ngrok](http://ngrok.com) servers for the WebHook to be accessible out of your network. This way, you don't have to worry about port forwarding or things like that (cause, come on, we all find that stuff boring).
+### Rejeição
+Se, por qualquer razão, você não puder completar a Promisse, o método reject deve ser chamado apenas com uma string que será enviada de volta par ao usuário com uma mensagem agradável.
 
-# Feature suggestions and bug reports
-Please, feel free to open issues for new feature requests or bugs; also, feel completely free to send me pull requests, just make sure ESLint is happy with your code, and that you follow the patterns found on the rest of the project.
+# Desativando comandos
+Se, por qualquer razão, você precisar inserir um comando na pasta [src/commands](src/commands) mas não deseja que ele esteja disponível, você pode adicioná-lo ao array `disabled` e  [src/commands/enabled.js](src/commands/enabledCommands.js#L5). Dessa forma, você pode escolher exatamente quais comandos o seu bot irá responder.
+
+# Conexão com servidor WebHook
+O bot está preparado para se conectar com o servidor ssh do [ngrok](http://ngrok.com) WebHook para ser acessado fora da sua rede. Dessa forma, você não precisa se preocupar com o encaminhamento de portas ou coisas assim.
+
+# Sugestões e report de bugs
+Por favor, sinta-se livre para abrir um issue para solicitar novos recursos ou correções de bugs. Também, sinta-se livre para enviar pedidos de pull requests, apenas certifique-se de validar seu código com ESLint e seguir os padrões do resto do projeto.
